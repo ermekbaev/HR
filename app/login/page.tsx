@@ -44,7 +44,6 @@ export default function Login() {
   const doLogin = async (username: string, password: string) => {
     const user = await login(username, password);
     if (user) {
-      showToast(`Добро пожаловать, ${user.name}!`, 'success');
       router.push(getRoleHome(user.role));
     } else {
       setError('Неверный логин или пароль');
@@ -76,11 +75,11 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Логотип */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <div className="w-16 h-16 bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
             <i className="ri-robot-line text-white text-2xl"></i>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Inter, system-ui, sans-serif', fontWeight: '700' }}>

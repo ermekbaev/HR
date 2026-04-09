@@ -581,7 +581,7 @@ export default function HRInterviews() {
             
             <div className="p-6">
               <div className="flex items-center space-x-4 mb-6">
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-lg font-semibold">
+                <div className="w-14 h-14 bg-linear-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-lg font-semibold">
                   {selectedInterview.candidateName.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div>
@@ -627,11 +627,17 @@ export default function HRInterviews() {
               <div className="flex space-x-3">
                 {selectedInterview.status === 'scheduled' && (
                   <>
-                    <Button className="flex-1">
+                    <Button className="flex-1" onClick={() => {
+                      setInterviews(prev => prev.map(i => i.id === selectedInterview.id ? { ...i, status: 'completed' } : i));
+                      setSelectedInterview(prev => prev ? { ...prev, status: 'completed' } : prev);
+                    }}>
                       <i className="ri-check-line mr-2"></i>
                       Завершить
                     </Button>
-                    <Button variant="outline" className="flex-1">
+                    <Button variant="outline" className="flex-1" onClick={() => {
+                      setInterviews(prev => prev.map(i => i.id === selectedInterview.id ? { ...i, status: 'cancelled' } : i));
+                      setSelectedInterview(null);
+                    }}>
                       <i className="ri-close-line mr-2"></i>
                       Отменить
                     </Button>

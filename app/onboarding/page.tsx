@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAppContext } from '@/context/AppContext';
+import { useToast } from '@/context/ToastContext';
 import Sidebar from '@/components/feature/Sidebar';
 import Header from '@/components/feature/Header';
 import Card from '@/components/base/Card';
@@ -9,7 +10,17 @@ import Button from '@/components/base/Button';
 
 export default function Onboarding() {
   const { currentUser } = useAppContext();
+  const { showToast } = useToast();
   const userRole = (currentUser?.role ?? 'employee') as 'employee' | 'mentor' | 'manager' | 'admin';
+  const [week2Checked, setWeek2Checked] = useState<Set<number>>(new Set([0, 1]));
+
+  const toggleWeek2Task = (index: number) => {
+    setWeek2Checked(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index); else next.add(index);
+      return next;
+    });
+  };
 
   // Контент для сотрудника (моя адаптация)
   const renderEmployeeOnboarding = () => (
@@ -29,7 +40,7 @@ export default function Onboarding() {
           </div>
           
           <div className="w-full bg-gray-200 rounded-full h-4 mb-4">
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-4 rounded-full" style={{ width: '67%' }}></div>
+            <div className="bg-linear-to-r from-blue-500 to-blue-600 h-4 rounded-full" style={{ width: '67%' }}></div>
           </div>
           
           <div className="flex justify-between text-sm text-gray-600">
@@ -93,34 +104,36 @@ export default function Onboarding() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
-              { task: 'Изучить корпоративные ценности', completed: true, coins: 25, current: false },
-              { task: 'Пройти курс по безопасности', completed: true, coins: 40, current: false },
-              { task: 'Встреча с наставником', completed: false, coins: 50, current: true },
-              { task: 'Изучить рабочие процессы', completed: false, coins: 35, current: false }
-            ].map((item, index) => (
-              <div key={index} className={`flex items-center justify-between p-3 rounded-lg ${
-                item.completed ? 'bg-green-50' : item.current ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50'
-              }`}>
-                <div className="flex items-center space-x-3">
-                  <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                    item.completed ? 'bg-green-500' : item.current ? 'bg-blue-500' : 'border-2 border-gray-300'
-                  }`}>
-                    {item.completed ? (
-                      <i className="ri-check-line text-white text-xs"></i>
-                    ) : item.current ? (
-                      <i className="ri-time-line text-white text-xs"></i>
-                    ) : null}
+              { task: 'Изучить корпоративные ценности', coins: 25 },
+              { task: 'Пройти курс по безопасности', coins: 40 },
+              { task: 'Встреча с наставником', coins: 50 },
+              { task: 'Изучить рабочие процессы', coins: 35 }
+            ].map((item, index) => {
+              const done = week2Checked.has(index);
+              return (
+                <div
+                  key={index}
+                  onClick={() => toggleWeek2Task(index)}
+                  className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
+                    done ? 'bg-green-50 hover:bg-green-100' : 'bg-gray-50 hover:bg-blue-50 border-2 border-transparent hover:border-blue-200'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
+                      done ? 'bg-green-500' : 'border-2 border-gray-300 hover:border-blue-400'
+                    }`}>
+                      {done && <i className="ri-check-line text-white text-xs"></i>}
+                    </div>
+                    <span className={`text-sm ${done ? 'text-gray-500 line-through' : 'text-gray-900'}`}>{item.task}</span>
                   </div>
-                  <span className="text-sm text-gray-900">{item.task}</span>
-                  {item.current && <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Текущая</span>}
+                  <span className={`text-xs px-2 py-1 rounded-full ${
+                    done ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                  }`}>
+                    +{item.coins} SC
+                  </span>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded-full ${
-                  item.completed ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                }`}>
-                  +{item.coins} SC
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
 
@@ -283,11 +296,11 @@ export default function Onboarding() {
             </div>
             
             <div className="mt-4 flex space-x-2">
-              <Button size="sm" variant="outline" className="flex-1">
+              <Button size="sm" variant="outline" className="flex-1" onClick={() => showToast(`${employee.name}: ${employee.completed}/${employee.tasks} задач выполнено, прогресс ${employee.progress}%`, 'info')}>
                 <i className="ri-eye-line mr-1"></i>
                 Подробнее
               </Button>
-              <Button size="sm" className="flex-1">
+              <Button size="sm" className="flex-1" onClick={() => showToast(`Сообщение отправлено ${employee.name}`, 'success')}>
                 <i className="ri-message-line mr-1"></i>
                 Связаться
               </Button>

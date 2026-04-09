@@ -71,7 +71,7 @@ export default function Profile() {
           {/* Шапка профиля */}
           <Card className="mb-6">
             <div className="flex items-start space-x-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
+              <div className="w-20 h-20 bg-linear-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
                 <i className="ri-user-line text-white text-3xl"></i>
               </div>
               <div className="flex-1">
@@ -82,7 +82,7 @@ export default function Profile() {
                   </span>
                 </div>
                 <p className="text-gray-500 mb-1">{userData.position}</p>
-                <p className="text-sm text-gray-400">{userData.department}</p>
+                <p className="text-sm text-gray-600">{userData.department}</p>
                 <div className="flex items-center space-x-4 mt-3">
                   <div className="flex items-center text-sm text-gray-500">
                     <i className="ri-mail-line mr-1"></i>
@@ -181,7 +181,7 @@ export default function Profile() {
               {achievements.length === 0 ? (
                 <div className="text-center py-8">
                   <i className="ri-medal-line text-4xl text-gray-300 mb-2"></i>
-                  <p className="text-sm text-gray-400">Выполняйте задачи, чтобы получить достижения</p>
+                  <p className="text-sm text-gray-500">Выполняйте задачи, чтобы получить достижения</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-2 gap-3">
@@ -206,7 +206,7 @@ export default function Profile() {
                       style={{ width: `${Math.round((completedTasks.length / myTasks.length) * 100)}%` }}
                     ></div>
                   </div>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-gray-500 mt-1">
                     {Math.round((completedTasks.length / myTasks.length) * 100)}% завершено
                   </p>
                 </div>

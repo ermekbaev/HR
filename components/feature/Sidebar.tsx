@@ -87,7 +87,7 @@ export default function Sidebar() {
     <div className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col shadow-sm overflow-y-auto flex-shrink-0">
       <div className="p-6 border-b border-gray-100">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 bg-linear-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
             <i className="ri-robot-line text-white text-xl"></i>
           </div>
           <div>
@@ -106,7 +106,7 @@ export default function Sidebar() {
                 onClick={() => handleNavigation(item)}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 cursor-pointer group ${
                   activeItem === item.id
-                    ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 shadow-sm border border-blue-200'
+                    ? 'bg-linear-to-r from-blue-50 to-blue-100 text-blue-700 shadow-sm border border-blue-200'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                 }`}
               >
@@ -132,7 +132,7 @@ export default function Sidebar() {
             className="flex items-center space-x-3 flex-1 min-w-0 hover:opacity-80 transition-opacity cursor-pointer text-left"
             title="Мой профиль"
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 bg-linear-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center flex-shrink-0">
               <i className="ri-user-line text-white text-lg"></i>
             </div>
             <div className="flex-1 min-w-0">

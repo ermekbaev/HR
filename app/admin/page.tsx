@@ -16,6 +16,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('users');
   const [showUserModal, setShowUserModal] = useState(false);
   const [editingUser, setEditingUser] = useState<AppUser | null>(null);
+  const [settings, setSettings] = useState({ autoApprove: true, mentorNotifications: true });
   const [newUser, setNewUser] = useState({
     username: '', name: '', email: '', role: 'employee' as AppUser['role'],
     department: '', position: '', password: ''
@@ -191,7 +192,7 @@ export default function AdminDashboard() {
                           <div>
                             <p className="font-medium text-gray-900">{user.name}</p>
                             <p className="text-sm text-gray-500">{user.email}</p>
-                            <p className="text-xs text-gray-400">@{user.username}</p>
+                            <p className="text-xs text-gray-500">@{user.username}</p>
                           </div>
                         </td>
                         <td className="py-4 px-4">
@@ -251,8 +252,11 @@ export default function AdminDashboard() {
                       <p className="font-medium text-gray-900">Автоматическое одобрение задач</p>
                       <p className="text-sm text-gray-500">Задачи без флага «Требует подтверждения» одобряются автоматически</p>
                     </div>
-                    <button className="w-12 h-6 bg-blue-600 rounded-full relative cursor-pointer">
-                      <div className="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5"></div>
+                    <button
+                      onClick={() => { setSettings(s => ({ ...s, autoApprove: !s.autoApprove })); showToast(`Автоодобрение ${settings.autoApprove ? 'отключено' : 'включено'}`, 'info'); }}
+                      className={`w-12 h-6 rounded-full relative cursor-pointer transition-colors ${settings.autoApprove ? 'bg-blue-600' : 'bg-gray-300'}`}
+                    >
+                      <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all ${settings.autoApprove ? 'right-0.5' : 'left-0.5'}`}></div>
                     </button>
                   </div>
                   <div className="flex items-center justify-between">
@@ -260,8 +264,11 @@ export default function AdminDashboard() {
                       <p className="font-medium text-gray-900">Уведомления наставникам</p>
                       <p className="text-sm text-gray-500">Отправлять уведомления о новых задачах на проверке</p>
                     </div>
-                    <button className="w-12 h-6 bg-blue-600 rounded-full relative cursor-pointer">
-                      <div className="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5"></div>
+                    <button
+                      onClick={() => { setSettings(s => ({ ...s, mentorNotifications: !s.mentorNotifications })); showToast(`Уведомления наставникам ${settings.mentorNotifications ? 'отключены' : 'включены'}`, 'info'); }}
+                      className={`w-12 h-6 rounded-full relative cursor-pointer transition-colors ${settings.mentorNotifications ? 'bg-blue-600' : 'bg-gray-300'}`}
+                    >
+                      <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all ${settings.mentorNotifications ? 'right-0.5' : 'left-0.5'}`}></div>
                     </button>
                   </div>
                 </div>
@@ -287,7 +294,7 @@ export default function AdminDashboard() {
 
       {/* Модальное окно создания/редактирования */}
       {showUserModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">

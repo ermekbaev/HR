@@ -184,7 +184,7 @@ export default function HRCandidates() {
                     <tr key={candidate.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                       <td className="py-4 px-4">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
+                          <div className="w-10 h-10 bg-linear-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
                             {candidate.name.split(' ').map(n => n[0]).join('')}
                           </div>
                           <div>
@@ -258,7 +258,7 @@ export default function HRCandidates() {
             </div>
             <div className="p-6">
               <div className="flex items-start space-x-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-xl font-semibold">
+                <div className="w-16 h-16 bg-linear-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-xl font-semibold">
                   {selectedCandidate.name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div className="flex-1">

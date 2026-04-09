@@ -13,6 +13,26 @@ export default function Learning() {
   const userData = getCurrentUserData();
   const skillCoins = userData?.skillCoins ?? 0;
   const [activeTab, setActiveTab] = useState('courses');
+  const [courseStates, setCourseStates] = useState<Record<number, { status: string; progress: number }>>({});
+
+  const handleCourseClick = (course: typeof courses[0]) => {
+    if (course.status === 'locked') return;
+    setCourseStates(prev => {
+      const cur = prev[course.id] ?? { status: course.status, progress: course.progress };
+      if (cur.status === 'completed') return prev;
+      const newProgress = Math.min(cur.progress + 25, 100);
+      return {
+        ...prev,
+        [course.id]: {
+          status: newProgress >= 100 ? 'completed' : 'in_progress',
+          progress: newProgress
+        }
+      };
+    });
+  };
+
+  const getCourseState = (course: typeof courses[0]) =>
+    courseStates[course.id] ?? { status: course.status, progress: course.progress };
 
   const courses = [
     {
@@ -206,25 +226,27 @@ export default function Learning() {
           {/* Контент вкладок */}
           {activeTab === 'courses' && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {courses.map((course) => (
+              {courses.map((course) => {
+                const state = getCourseState(course);
+                return (
                 <Card key={course.id}>
                   <div className="flex space-x-4">
                     <img
-                      src={`https://readdy.ai/api/search-image?query=$%7Bcourse.image%7D&width=120&height=120&seq=course${course.id}&orientation=squarish`}
+                      src={`/course${course.id}.jpg`}
                       alt={course.title}
                       className="w-20 h-20 rounded-lg object-cover object-top flex-shrink-0"
                     />
-                    
+
                     <div className="flex-1">
                       <div className="flex items-start justify-between mb-2">
                         <h3 className="text-lg font-semibold text-gray-900">{course.title}</h3>
-                        <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(course.status)}`}>
-                          {getStatusLabel(course.status)}
+                        <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(state.status)}`}>
+                          {getStatusLabel(state.status)}
                         </span>
                       </div>
-                      
+
                       <p className="text-sm text-gray-600 mb-3">{course.description}</p>
-                      
+
                       <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
                         <span className="flex items-center">
                           <i className="ri-time-line mr-1"></i>
@@ -239,33 +261,34 @@ export default function Learning() {
                           +{course.coins} SC
                         </span>
                       </div>
-                      
-                      {course.progress > 0 && course.status !== 'completed' && (
+
+                      {state.progress > 0 && state.status !== 'completed' && (
                         <div className="mb-3">
                           <div className="flex justify-between text-sm text-gray-600 mb-1">
                             <span>Прогресс</span>
-                            <span>{course.progress}%</span>
+                            <span>{state.progress}%</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
-                              className="bg-blue-600 h-2 rounded-full" 
-                              style={{ width: `${course.progress}%` }}
+                            <div
+                              className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                              style={{ width: `${state.progress}%` }}
                             ></div>
                           </div>
                         </div>
                       )}
-                      
+
                       <div className="flex justify-between items-center">
                         <Button
                           size="sm"
-                          disabled={course.status === 'locked'}
-                          variant={course.status === 'completed' ? 'outline' : 'primary'}
+                          disabled={state.status === 'locked'}
+                          variant={state.status === 'completed' ? 'outline' : 'primary'}
+                          onClick={() => handleCourseClick(course)}
                         >
-                          {course.status === 'completed' 
+                          {state.status === 'completed'
                             ? 'Пересмотреть'
-                            : course.status === 'in_progress'
+                            : state.status === 'in_progress'
                             ? 'Продолжить'
-                            : course.status === 'locked'
+                            : state.status === 'locked'
                             ? 'Заблокирован'
                             : 'Начать курс'
                           }
@@ -274,7 +297,8 @@ export default function Learning() {
                     </div>
                   </div>
                 </Card>
-              ))}
+                );
+              })}
             </div>
           )}
 

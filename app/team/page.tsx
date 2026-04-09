@@ -127,10 +127,10 @@ export default function Team() {
               </div>
             </div>
             <div className="mt-4 flex space-x-2">
-              <Button size="sm" variant="outline" className="flex-1">
+              <Button size="sm" variant="outline" className="flex-1" onClick={() => showToast(`Сообщение отправлено ${member.name}`, 'success')}>
                 <i className="ri-message-line mr-1"></i>Написать
               </Button>
-              <Button size="sm" variant="outline" className="flex-1">
+              <Button size="sm" variant="outline" className="flex-1" onClick={() => showToast(`Профиль: ${member.name} — ${member.position}`, 'info')}>
                 <i className="ri-user-line mr-1"></i>Профиль
               </Button>
             </div>
@@ -403,7 +403,7 @@ export default function Team() {
 
       {/* Модальное окно награждения */}
       {showRewardModal && selectedEmployee && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             {rewardSuccess ? (
               <div className="text-center py-8">

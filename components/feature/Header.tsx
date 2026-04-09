@@ -65,7 +65,7 @@ export default function Header({ title, hideCoins = false }: HeaderProps) {
 
         {!hideCoins && (
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-50 to-yellow-100 px-4 py-2 rounded-full border border-yellow-200">
+            <div className="flex items-center space-x-2 bg-linear-to-r from-yellow-50 to-yellow-100 px-4 py-2 rounded-full border border-yellow-200">
               <i className="ri-coin-line text-yellow-600 text-xl"></i>
               <div>
                 <p className="text-sm font-semibold text-yellow-800">{skillCoins.toLocaleString()}</p>

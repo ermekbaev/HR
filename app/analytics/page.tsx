@@ -189,7 +189,7 @@ export default function Analytics() {
                     <div className="text-center">
                       <i className="ri-bar-chart-line text-4xl text-gray-400 mb-2"></i>
                       <p className="text-gray-500">График динамики текучести по месяцам</p>
-                      <p className="text-sm text-gray-400 mt-1">Показывает снижение с 35% до 23%</p>
+                      <p className="text-sm text-gray-500 mt-1">Показывает снижение с 35% до 23%</p>
                     </div>
                   </div>
                 </Card>
@@ -206,7 +206,7 @@ export default function Analytics() {
                       { name: 'Поддержка', value: 68, color: 'bg-orange-500' }
                     ].map(dept => (
                       <div key={dept.name}>
-                        <div className="flex justify-between text-sm mb-1"><span>{dept.name}</span><span>{dept.value}%</span></div>
+                        <div className="flex justify-between text-sm mb-1 text-gray-700"><span>{dept.name}</span><span>{dept.value}%</span></div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div className={`${dept.color} h-2 rounded-full`} style={{ width: `${dept.value}%` }}></div>
                         </div>
@@ -346,7 +346,7 @@ export default function Analytics() {
 
       {/* Модалка создания опроса */}
       {showSurveyModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               {surveyCreated ? (

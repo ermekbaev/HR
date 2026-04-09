@@ -158,7 +158,7 @@ export default function HRRanking() {
           {/* Описание */}
           <Card className="mb-6">
             <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
                 <i className="ri-robot-line text-white text-xl"></i>
               </div>
               <div className="flex-1">
@@ -211,10 +211,10 @@ export default function HRRanking() {
                 <div className="flex items-start space-x-4">
                   {/* Ранг */}
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0 ${
-                    index === 0 ? 'bg-gradient-to-br from-yellow-400 to-yellow-600' :
-                    index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-500' :
-                    index === 2 ? 'bg-gradient-to-br from-orange-400 to-orange-600' :
-                    'bg-gradient-to-br from-blue-400 to-blue-600'
+                    index === 0 ? 'bg-linear-to-br from-yellow-400 to-yellow-600' :
+                    index === 1 ? 'bg-linear-to-br from-gray-300 to-gray-500' :
+                    index === 2 ? 'bg-linear-to-br from-orange-400 to-orange-600' :
+                    'bg-linear-to-br from-blue-400 to-blue-600'
                   }`}>
                     #{index + 1}
                   </div>
@@ -352,7 +352,7 @@ export default function HRRanking() {
             
             <div className="p-6">
               <div className="flex items-center space-x-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-xl font-semibold">
+                <div className="w-16 h-16 bg-linear-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-xl font-semibold">
                   {selectedCandidate.name.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div>

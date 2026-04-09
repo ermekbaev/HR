@@ -22,6 +22,53 @@ export default function Dashboard() {
   const [surveyAnswers, setSurveyAnswers] = useState<Record<string, string>>({});
   const [surveyDone, setSurveyDone] = useState(false);
 
+  const [showTaskModal, setShowTaskModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [taskProgress, setTaskProgress] = useState(0);
+  const [taskNotes, setTaskNotes] = useState('');
+
+  const handleTaskClick = (task: any) => {
+    setSelectedTask(task);
+    setTaskProgress(task.status === 'rejected' ? 0 : task.progress);
+    setTaskNotes('');
+    setShowTaskModal(true);
+  };
+
+  const handleSubmitTask = () => {
+    if (!selectedTask) return;
+    submitTask(selectedTask.id, taskProgress, taskNotes);
+    showToast(
+      taskProgress === 100
+        ? selectedTask.requiresApproval
+          ? `«${selectedTask.title}» отправлена на проверку`
+          : `«${selectedTask.title}» выполнена! +${selectedTask.coins} SC`
+        : `Прогресс сохранён`,
+      taskProgress === 100 && !selectedTask.requiresApproval ? 'success' : 'info'
+    );
+    setShowTaskModal(false);
+    setSelectedTask(null);
+    setTaskProgress(0);
+    setTaskNotes('');
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'bg-red-100 text-red-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'low': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getPriorityLabel = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'Высокий';
+      case 'medium': return 'Средний';
+      case 'low': return 'Низкий';
+      default: return 'Обычный';
+    }
+  };
+
   const myTasks = tasks.filter(t => t.employeeId === currentUser?.id);
   const availableSurveys = surveys.filter(s => currentUser && !s.completions.some(c => c.userId === currentUser!.id));
 
@@ -176,38 +223,22 @@ export default function Dashboard() {
             {myTasks.slice(0, 4).map(t => {
               const isDone = t.status === 'completed' || t.status === 'pending';
               return (
-                <div key={t.id} className={`flex items-center p-3 rounded-lg group ${isDone ? 'bg-green-50' : 'bg-gray-50'}`}>
-                  {isDone ? (
-                    <button
-                      onClick={() => {
-                        if (t.status === 'pending') {
-                          cancelTask(t.id);
-                          showToast(`«${t.title}» возвращена в работу`, 'info');
-                        }
-                      }}
-                      className={`w-4 h-4 bg-green-600 rounded mr-3 flex items-center justify-center flex-shrink-0 ${t.status === 'pending' ? 'hover:bg-gray-400 cursor-pointer' : 'cursor-default'} transition-colors`}
-                      title={t.status === 'pending' ? 'Отменить отправку' : undefined}
-                    >
-                      <i className="ri-check-line text-white text-xs"></i>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        submitTask(t.id, 100, '');
-                        showToast(
-                          t.requiresApproval ? `«${t.title}» отправлена на проверку` : `«${t.title}» выполнена! +${t.coins} SC`,
-                          t.requiresApproval ? 'info' : 'success'
-                        );
-                      }}
-                      className="w-4 h-4 border-2 border-blue-600 rounded mr-3 flex-shrink-0 hover:bg-blue-600 transition-colors cursor-pointer flex items-center justify-center"
-                      title={t.requiresApproval ? 'Отправить на проверку' : 'Отметить выполненной'}
-                    >
-                      <i className="ri-check-line text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                    </button>
-                  )}
+                <div
+                  key={t.id}
+                  onClick={() => !isDone && handleTaskClick(t)}
+                  className={`flex items-center p-3 rounded-lg ${isDone ? 'bg-green-50' : 'bg-gray-50 hover:bg-gray-100 cursor-pointer'} transition-colors`}
+                >
+                  <div className={`w-4 h-4 rounded mr-3 flex items-center justify-center flex-shrink-0 border-2 ${
+                    t.status === 'completed' ? 'bg-green-600 border-green-600' :
+                    t.status === 'pending' ? 'bg-orange-500 border-orange-500' :
+                    'border-blue-600'
+                  }`}>
+                    {t.status === 'completed' && <i className="ri-check-line text-white text-xs"></i>}
+                    {t.status === 'pending' && <i className="ri-hourglass-line text-white text-xs"></i>}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className={`text-sm font-medium truncate ${isDone ? 'text-gray-500 line-through' : 'text-gray-900'}`}>{t.title}</p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-500">
                       {t.status === 'pending' ? 'На проверке' : t.status === 'completed' ? 'Выполнено' : `До ${new Date(t.dueDate).toLocaleDateString('ru-RU')}`}
                     </p>
                   </div>
@@ -292,7 +323,7 @@ export default function Dashboard() {
               { title: 'Командный игрок', sub: 'Участие в проекте', color: 'from-purple-50 to-purple-100', bg: 'bg-purple-500', icon: 'ri-team-line' }
             ].map((a, i) => (
               <button key={i} onClick={() => router.push('/profile')} className="cursor-pointer text-left w-full">
-                <div className={`text-center p-4 bg-gradient-to-br ${a.color} rounded-lg`}>
+                <div className={`text-center p-4 bg-linear-to-br ${a.color} rounded-lg`}>
                   <div className={`w-12 h-12 ${a.bg} rounded-full flex items-center justify-center mx-auto mb-2`}>
                     <i className={`${a.icon} text-white text-xl`}></i>
                   </div>
@@ -467,9 +498,96 @@ export default function Dashboard() {
         </main>
       </div>
 
+      {/* Модалка задачи */}
+      {showTaskModal && selectedTask && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                {selectedTask.status === 'rejected' ? 'Доработка задачи' : 'Выполнение задачи'}
+              </h3>
+              <button onClick={() => setShowTaskModal(false)} className="text-gray-400 hover:text-gray-600 cursor-pointer">
+                <i className="ri-close-line text-xl"></i>
+              </button>
+            </div>
+
+            <div className="mb-4">
+              <h4 className="font-medium text-gray-900 mb-1">{selectedTask.title}</h4>
+              <p className="text-sm text-gray-600 mb-3">{selectedTask.description}</p>
+              <div className="flex items-center space-x-2 mb-3">
+                <span className={`text-xs px-2 py-1 rounded-full ${getPriorityColor(selectedTask.priority)}`}>
+                  {getPriorityLabel(selectedTask.priority)}
+                </span>
+                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{selectedTask.category}</span>
+                <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">+{selectedTask.coins} SC</span>
+              </div>
+              {selectedTask.requiresApproval && (
+                <div className="flex items-center p-3 bg-gray-50 rounded-lg">
+                  <i className="ri-user-line text-gray-600 mr-2"></i>
+                  <p className="text-xs text-gray-600">Требует подтверждения наставника: {selectedTask.mentor}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Прогресс выполнения: {taskProgress}%
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={taskProgress}
+                onChange={(e) => setTaskProgress(Number(e.target.value))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>0%</span><span>50%</span><span>100%</span>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Комментарий (необязательно)
+              </label>
+              <textarea
+                value={taskNotes}
+                onChange={(e) => setTaskNotes(e.target.value)}
+                placeholder="Добавьте комментарий о выполнении задачи..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                rows={3}
+                maxLength={500}
+              />
+            </div>
+
+            {taskProgress === 100 && (
+              <div className={`mb-4 p-3 border rounded-lg ${selectedTask.requiresApproval ? 'bg-orange-50 border-orange-200' : 'bg-green-50 border-green-200'}`}>
+                <div className="flex items-center">
+                  <i className={`mr-2 ${selectedTask.requiresApproval ? 'ri-hourglass-line text-orange-600' : 'ri-coin-line text-green-600'}`}></i>
+                  <span className={`text-sm ${selectedTask.requiresApproval ? 'text-orange-800' : 'text-green-800'}`}>
+                    {selectedTask.requiresApproval
+                      ? `Задача будет отправлена на проверку наставнику ${selectedTask.mentor}`
+                      : `Вы получите +${selectedTask.coins} SkillCoins за выполнение!`}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            <div className="flex space-x-3">
+              <Button variant="secondary" onClick={() => setShowTaskModal(false)} className="flex-1">Отмена</Button>
+              <Button onClick={handleSubmitTask} className="flex-1">
+                {taskProgress === 100
+                  ? selectedTask.requiresApproval ? 'Отправить на проверку' : 'Завершить задачу'
+                  : 'Сохранить прогресс'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Модалка опроса */}
       {activeSurvey && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               {surveyDone ? (
