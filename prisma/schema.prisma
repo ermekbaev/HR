@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(cuid())
+  username   String    @unique
+  name       String
+  email      String    @unique
+  password   String
+  role       Role      @default(employee)
+  department String
+  position   String
+  status     Status    @default(active)
+  skillCoins Int       @default(0)
+  lastLogin  DateTime?
+  createdAt  DateTime  @default(now())
+
+  tasksAsEmployee  Task[]             @relation("EmployeeTasks")
+  notifications    Notification[]
+  surveyCompletions SurveyCompletion[]
+}
+
+model Task {
+  id                Int        @id @default(autoincrement())
+  title             String
+  description       String
+  priority          Priority   @default(medium)
+  status            TaskStatus @default(active)
+  dueDate           String
+  coins             Int
+  category          String
+  progress          Int        @default(0)
+  mentor            String
+  requiresApproval  Boolean    @default(true)
+  employeeId        String
+  employeeName      String
+  submittedAt       DateTime?
+  submissionNotes   String?
+  approvedAt        DateTime?
+  rejectedAt        DateTime?
+  rejectionFeedback String?
+  createdAt         DateTime   @default(now())
+
+  employee User @relation("EmployeeTasks", fields: [employeeId], references: [id])
+}
+
+model Candidate {
+  id          String          @id @default(cuid())
+  name        String
+  position    String
+  email       String
+  phone       String
+  experience  String
+  skills      String[]
+  aiScore     Int
+  status      CandidateStatus @default(new)
+  appliedDate String
+  source      String
+  createdAt   DateTime        @default(now())
+}
+
+model Survey {
+  id             String   @id @default(cuid())
+  title          String
+  description    String
+  type           String
+  targetAudience String
+  questions      String[]
+  frequency      String
+  createdBy      String
+  createdAt      DateTime @default(now())
+
+  completions SurveyCompletion[]
+}
+
+model SurveyCompletion {
+  id          String   @id @default(cuid())
+  surveyId    String
+  userId      String
+  completedAt DateTime @default(now())
+
+  survey Survey @relation(fields: [surveyId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([surveyId, userId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  message   String
+  icon      String
+  color     String
+  read      Boolean  @default(false)
+  forUserId String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [forUserId], references: [id])
+}
+
+enum Role {
+  employee
+  mentor
+  manager
+  hr
+  admin
+}
+
+enum Status {
+  active
+  inactive
+}
+
+enum Priority {
+  high
+  medium
+  low
+}
+
+enum TaskStatus {
+  active
+  pending
+  completed
+  rejected
+  overdue
+}
+
+enum CandidateStatus {
+  new
+  screening
+  interview
+  offer
+  hired
+  rejected
+}
