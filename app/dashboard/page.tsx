@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import Sidebar from '@/components/feature/Sidebar';
 import Header from '@/components/feature/Header';
@@ -17,14 +17,10 @@ export default function Dashboard() {
   const router = useRouter();
   const { currentUser, tasks, surveys, completeSurvey, users, submitTask, cancelTask } = useAppContext();
   const { showToast } = useToast();
-  const [userRole, setUserRole] = useState<'employee' | 'manager'>('employee');
+  const userRole = (currentUser?.role ?? 'employee') as 'employee' | 'manager';
   const [activeSurvey, setActiveSurvey] = useState<Survey | null>(null);
   const [surveyAnswers, setSurveyAnswers] = useState<Record<string, string>>({});
   const [surveyDone, setSurveyDone] = useState(false);
-
-  useEffect(() => {
-    if (currentUser) setUserRole(currentUser.role as any);
-  }, [currentUser]);
 
   const myTasks = tasks.filter(t => t.employeeId === currentUser?.id);
   const availableSurveys = surveys.filter(s => currentUser && !s.completions.some(c => c.userId === currentUser!.id));
@@ -458,7 +454,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar userRole={userRole} />
+      <Sidebar />
 
       <div className="flex-1 overflow-y-auto">
         <Header

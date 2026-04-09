@@ -12,8 +12,10 @@ import { useAppContext } from '@/context/AppContext';
 
 export default function Profile() {
   const router = useRouter();
-  const { currentUser, getCurrentUserData, tasks, logout } = useAppContext();
+  const { currentUser, getCurrentUserData, tasks, logout, loading } = useAppContext();
   const userData = getCurrentUserData();
+
+  if (loading) return null;
 
   if (!currentUser || !userData) {
     router.push('/login');
@@ -60,7 +62,7 @@ export default function Profile() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar userRole={currentUser.role as any} />
+      <Sidebar />
 
       <div className="flex-1 overflow-y-auto">
         <Header title="Мой профиль" />

@@ -1,7 +1,7 @@
 'use client'
 
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Sidebar from '@/components/feature/Sidebar';
 import Header from '@/components/feature/Header';
 import Card from '@/components/base/Card';
@@ -12,16 +12,12 @@ import { useToast } from '@/context/ToastContext';
 export default function Team() {
   const { currentUser, users, awardSkillCoins } = useAppContext();
   const { showToast } = useToast();
-  const [userRole, setUserRole] = useState<'employee' | 'mentor' | 'manager' | 'admin' | 'hr'>('employee');
+  const userRole = (currentUser?.role ?? 'employee') as 'employee' | 'mentor' | 'manager' | 'admin' | 'hr';
   const [showRewardModal, setShowRewardModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
   const [rewardAmount, setRewardAmount] = useState('');
   const [rewardReason, setRewardReason] = useState('');
   const [rewardSuccess, setRewardSuccess] = useState(false);
-
-  useEffect(() => {
-    if (currentUser) setUserRole(currentUser.role as any);
-  }, [currentUser]);
 
   const handleRewardEmployee = (employee: any) => {
     setSelectedEmployee(employee);
@@ -385,7 +381,7 @@ export default function Team() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar userRole={userRole} />
+      <Sidebar />
 
       <div className="flex-1 overflow-y-auto">
         <Header

@@ -260,7 +260,7 @@ export default function HRInterviews() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar userRole="hr" />
+      <Sidebar />
 
       <div className="flex-1 overflow-y-auto">
         <Header title="Собеседования" hideCoins />

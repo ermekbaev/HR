@@ -82,7 +82,7 @@ export default function MentorDashboard() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar userRole="mentor" />
+      <Sidebar />
 
       <div className="flex-1 overflow-y-auto">
         <Header title="Панель наставника" />

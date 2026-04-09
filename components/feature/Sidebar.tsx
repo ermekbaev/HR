@@ -7,10 +7,6 @@ import { useState, useEffect } from 'react';
 
 import { useAppContext } from '@/context/AppContext';
 
-interface SidebarProps {
-  userRole: 'employee' | 'mentor' | 'manager' | 'admin' | 'hr';
-}
-
 interface MenuItem {
   id: string;
   label: string;
@@ -19,11 +15,12 @@ interface MenuItem {
   badge?: number;
 }
 
-export default function Sidebar({ userRole }: SidebarProps) {
+export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const [activeItem, setActiveItem] = useState(pathname.slice(1) || 'dashboard');
   const { currentUser, logout, getPendingTasksCount, getUnansweredSurveysCount, hasUnreadTaskFeedback } = useAppContext();
+  const userRole = (currentUser?.role ?? 'employee') as 'employee' | 'mentor' | 'manager' | 'admin' | 'hr';
 
   useEffect(() => {
     const path = pathname.slice(1) || 'dashboard';
@@ -33,7 +30,7 @@ export default function Sidebar({ userRole }: SidebarProps) {
   const pendingCount = getPendingTasksCount();
   const surveyCount = getUnansweredSurveysCount();
 
-  const menuItems: Record<SidebarProps['userRole'], MenuItem[]> = {
+  const menuItems: Record<'employee' | 'mentor' | 'manager' | 'admin' | 'hr', MenuItem[]> = {
     employee: [
       { id: 'dashboard', label: 'Дашборд', icon: 'ri-dashboard-3-line', path: '/dashboard', badge: surveyCount > 0 ? surveyCount : undefined },
       { id: 'onboarding', label: 'Моя адаптация', icon: 'ri-user-add-line', path: '/onboarding' },

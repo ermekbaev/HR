@@ -123,7 +123,7 @@ export default function Rewards() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar userRole="employee" />
+      <Sidebar />
 
       <div className="flex-1 overflow-y-auto">
         <Header title="Магазин наград" />

@@ -2,14 +2,16 @@
 
 
 import { useState } from 'react';
+import { useAppContext } from '@/context/AppContext';
 import Sidebar from '@/components/feature/Sidebar';
 import Header from '@/components/feature/Header';
 import Card from '@/components/base/Card';
 import Button from '@/components/base/Button';
 
 export default function Learning() {
-  const [userRole] = useState<'employee' | 'manager' | 'hr' | 'admin'>('employee');
-  const [skillCoins] = useState(1250);
+  const { getCurrentUserData } = useAppContext();
+  const userData = getCurrentUserData();
+  const skillCoins = userData?.skillCoins ?? 0;
   const [activeTab, setActiveTab] = useState('courses');
 
   const courses = [
@@ -116,7 +118,7 @@ export default function Learning() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar userRole={userRole} />
+      <Sidebar />
 
       <div className="flex-1 overflow-y-auto">
         <Header title="Обучение" />

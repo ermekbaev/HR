@@ -300,7 +300,7 @@ export default function Onboarding() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar userRole={userRole} />
+      <Sidebar />
 
       <div className="flex-1 overflow-y-auto">
         <Header 

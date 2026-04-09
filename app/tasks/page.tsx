@@ -96,7 +96,7 @@ export default function Tasks() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar userRole="employee" />
+      <Sidebar />
 
       <div className="flex-1 overflow-y-auto">
         <Header title="Задачи" />

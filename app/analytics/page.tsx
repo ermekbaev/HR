@@ -1,7 +1,7 @@
 'use client'
 
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Sidebar from '@/components/feature/Sidebar';
 import Header from '@/components/feature/Header';
 import Card from '@/components/base/Card';
@@ -12,7 +12,7 @@ import { useToast } from '@/context/ToastContext';
 export default function Analytics() {
   const { currentUser, surveys, createSurvey } = useAppContext();
   const { showToast } = useToast();
-  const [userRole, setUserRole] = useState<'employee' | 'manager' | 'hr' | 'admin'>('hr');
+  const userRole = (currentUser?.role ?? 'hr') as 'employee' | 'manager' | 'hr' | 'admin';
   const [activeTab, setActiveTab] = useState('overview');
   const [showSurveyModal, setShowSurveyModal] = useState(false);
   const [surveyCreated, setSurveyCreated] = useState(false);
@@ -20,10 +20,6 @@ export default function Analytics() {
     title: '', description: '', type: 'satisfaction',
     targetAudience: 'all', questions: [''], frequency: 'once'
   });
-
-  useEffect(() => {
-    if (currentUser) setUserRole(currentUser.role as any);
-  }, [currentUser]);
 
   const tabs = [
     { id: 'overview', label: 'Обзор', icon: 'ri-dashboard-line' },
@@ -94,7 +90,7 @@ export default function Analytics() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar userRole={userRole} />
+      <Sidebar />
 
       <div className="flex-1 overflow-y-auto">
         <Header title="Аналитика и прогнозы" hideCoins />
