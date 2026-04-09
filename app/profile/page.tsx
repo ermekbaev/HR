@@ -1,18 +1,22 @@
+'use client'
 
-import { useNavigate } from 'react-router-dom';
-import Sidebar from '../../components/feature/Sidebar';
-import Header from '../../components/feature/Header';
-import Card from '../../components/base/Card';
-import Button from '../../components/base/Button';
-import { useAppContext } from '../../context/AppContext';
+import { useRouter } from 'next/navigation'
+
+
+
+import Sidebar from '@/components/feature/Sidebar';
+import Header from '@/components/feature/Header';
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
+import { useAppContext } from '@/context/AppContext';
 
 export default function Profile() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { currentUser, getCurrentUserData, tasks, logout } = useAppContext();
   const userData = getCurrentUserData();
 
   if (!currentUser || !userData) {
-    navigate('/login');
+    router.push('/login');
     return null;
   }
 
@@ -51,7 +55,7 @@ export default function Profile() {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    router.push('/login');
   };
 
   return (

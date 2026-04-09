@@ -1,25 +1,15 @@
+'use client'
 
-import { useState, useEffect } from 'react';
-import Sidebar from '../../components/feature/Sidebar';
-import Header from '../../components/feature/Header';
-import Card from '../../components/base/Card';
-import Button from '../../components/base/Button';
+import { useState } from 'react';
+import { useAppContext } from '@/context/AppContext';
+import Sidebar from '@/components/feature/Sidebar';
+import Header from '@/components/feature/Header';
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
 
 export default function Onboarding() {
-  const [userRole, setUserRole] = useState<'employee' | 'mentor' | 'manager' | 'admin'>('employee');
-  const [skillCoins] = useState(1250);
-
-  useEffect(() => {
-    const userData = localStorage.getItem('currentUser');
-    if (userData) {
-      try {
-        const user = JSON.parse(userData);
-        setUserRole(user.role || 'employee');
-      } catch (error) {
-        console.error('Failed to parse currentUser from localStorage:', error);
-      }
-    }
-  }, []);
+  const { currentUser } = useAppContext();
+  const userRole = (currentUser?.role ?? 'employee') as 'employee' | 'mentor' | 'manager' | 'admin';
 
   // Контент для сотрудника (моя адаптация)
   const renderEmployeeOnboarding = () => (
@@ -315,7 +305,7 @@ export default function Onboarding() {
       <div className="flex-1 overflow-y-auto">
         <Header 
           title={userRole === 'mentor' ? 'Прогресс адаптации' : 'Моя адаптация'} 
-          skillCoins={userRole === 'mentor' ? 2850 : skillCoins} 
+          
         />
         
         <main className="p-6">

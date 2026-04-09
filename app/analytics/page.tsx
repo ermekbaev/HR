@@ -1,11 +1,13 @@
+'use client'
+
 
 import { useState, useEffect } from 'react';
-import Sidebar from '../../components/feature/Sidebar';
-import Header from '../../components/feature/Header';
-import Card from '../../components/base/Card';
-import Button from '../../components/base/Button';
-import { useAppContext } from '../../context/AppContext';
-import { useToast } from '../../context/ToastContext';
+import Sidebar from '@/components/feature/Sidebar';
+import Header from '@/components/feature/Header';
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
+import { useAppContext } from '@/context/AppContext';
+import { useToast } from '@/context/ToastContext';
 
 export default function Analytics() {
   const { currentUser, surveys, createSurvey } = useAppContext();
@@ -290,7 +292,7 @@ export default function Analytics() {
                       <div key={s.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div>
                           <h4 className="font-medium text-gray-900">{s.title}</h4>
-                          <p className="text-sm text-gray-500">{s.questions.length} вопрос(а) • {s.completedBy.length} ответ(а)</p>
+                          <p className="text-sm text-gray-500">{s.questions.length} вопрос(а) • {s.completions.length} ответ(а)</p>
                         </div>
                         <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Активен</span>
                       </div>

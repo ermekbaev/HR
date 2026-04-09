@@ -1,16 +1,20 @@
+'use client'
+
+import { useRouter } from 'next/navigation'
+
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Sidebar from '../../components/feature/Sidebar';
-import Header from '../../components/feature/Header';
-import Card from '../../components/base/Card';
-import Button from '../../components/base/Button';
-import { useAppContext } from '../../context/AppContext';
-import { useToast } from '../../context/ToastContext';
-import type { Survey } from '../../context/AppContext';
+
+import Sidebar from '@/components/feature/Sidebar';
+import Header from '@/components/feature/Header';
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
+import { useAppContext } from '@/context/AppContext';
+import { useToast } from '@/context/ToastContext';
+import type { Survey } from '@/context/AppContext';
 
 export default function Dashboard() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { currentUser, tasks, surveys, completeSurvey, users, submitTask, cancelTask } = useAppContext();
   const { showToast } = useToast();
   const [userRole, setUserRole] = useState<'employee' | 'manager'>('employee');
@@ -23,7 +27,7 @@ export default function Dashboard() {
   }, [currentUser]);
 
   const myTasks = tasks.filter(t => t.employeeId === currentUser?.id);
-  const availableSurveys = surveys.filter(s => currentUser && !s.completedBy.includes(currentUser.id));
+  const availableSurveys = surveys.filter(s => currentUser && !s.completions.some(c => c.userId === currentUser!.id));
 
   const handleOpenSurvey = (survey: Survey) => {
     setActiveSurvey(survey);
@@ -93,7 +97,7 @@ export default function Dashboard() {
 
       {/* Статистика */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <button onClick={() => navigate('/tasks')} className="text-left cursor-pointer w-full">
+        <button onClick={() => router.push('/tasks')} className="text-left cursor-pointer w-full">
           <Card>
             <div className="flex items-center">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -106,7 +110,7 @@ export default function Dashboard() {
             </div>
           </Card>
         </button>
-        <button onClick={() => navigate('/learning')} className="text-left cursor-pointer w-full">
+        <button onClick={() => router.push('/learning')} className="text-left cursor-pointer w-full">
           <Card>
             <div className="flex items-center">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -119,7 +123,7 @@ export default function Dashboard() {
             </div>
           </Card>
         </button>
-        <button onClick={() => navigate('/profile')} className="text-left cursor-pointer w-full">
+        <button onClick={() => router.push('/profile')} className="text-left cursor-pointer w-full">
           <Card>
             <div className="flex items-center">
               <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -170,7 +174,7 @@ export default function Dashboard() {
         <Card>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Текущие задачи</h3>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/tasks')}>Все задачи</Button>
+            <Button variant="ghost" size="sm" onClick={() => router.push('/tasks')}>Все задачи</Button>
           </div>
           <div className="space-y-3">
             {myTasks.slice(0, 4).map(t => {
@@ -226,10 +230,10 @@ export default function Dashboard() {
         <Card>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Рекомендуемое обучение</h3>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/learning')}>Все курсы</Button>
+            <Button variant="ghost" size="sm" onClick={() => router.push('/learning')}>Все курсы</Button>
           </div>
           <div className="space-y-4">
-            <button onClick={() => navigate('/learning')} className="w-full text-left cursor-pointer">
+            <button onClick={() => router.push('/learning')} className="w-full text-left cursor-pointer">
               <div className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-start space-x-3">
                   <img
@@ -251,7 +255,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </button>
-            <button onClick={() => navigate('/learning')} className="w-full text-left cursor-pointer">
+            <button onClick={() => router.push('/learning')} className="w-full text-left cursor-pointer">
               <div className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-start space-x-3">
                   <img
@@ -282,7 +286,7 @@ export default function Dashboard() {
         <Card>
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Последние достижения</h3>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/profile')}>Все достижения</Button>
+            <Button variant="ghost" size="sm" onClick={() => router.push('/profile')}>Все достижения</Button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
@@ -291,7 +295,7 @@ export default function Dashboard() {
               { title: 'Ученик', sub: 'Первый курс пройден', color: 'from-green-50 to-green-100', bg: 'bg-green-500', icon: 'ri-book-line' },
               { title: 'Командный игрок', sub: 'Участие в проекте', color: 'from-purple-50 to-purple-100', bg: 'bg-purple-500', icon: 'ri-team-line' }
             ].map((a, i) => (
-              <button key={i} onClick={() => navigate('/profile')} className="cursor-pointer text-left w-full">
+              <button key={i} onClick={() => router.push('/profile')} className="cursor-pointer text-left w-full">
                 <div className={`text-center p-4 bg-gradient-to-br ${a.color} rounded-lg`}>
                   <div className={`w-12 h-12 ${a.bg} rounded-full flex items-center justify-center mx-auto mb-2`}>
                     <i className={`${a.icon} text-white text-xl`}></i>
@@ -366,11 +370,11 @@ export default function Dashboard() {
           <Card>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Топ сотрудники месяца</h3>
-              <Button variant="ghost" size="sm" onClick={() => navigate('/team')}>Все сотрудники</Button>
+              <Button variant="ghost" size="sm" onClick={() => router.push('/team')}>Все сотрудники</Button>
             </div>
             <div className="space-y-4">
               {topEmployees.map((emp, index) => (
-                <button key={emp.id} onClick={() => navigate('/team')} className="w-full cursor-pointer text-left">
+                <button key={emp.id} onClick={() => router.push('/team')} className="w-full cursor-pointer text-left">
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${

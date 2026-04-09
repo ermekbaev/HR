@@ -1,10 +1,12 @@
+'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Sidebar from '../../../components/feature/Sidebar';
-import Header from '../../../components/feature/Header';
-import Card from '../../../components/base/Card';
-import Button from '../../../components/base/Button';
+import { useAppContext } from '@/context/AppContext';
+import Sidebar from '@/components/feature/Sidebar';
+import Header from '@/components/feature/Header';
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
 
 interface Interview {
   id: string;
@@ -95,7 +97,8 @@ const candidates = [
 ];
 
 export default function HRInterviews() {
-  const navigate = useNavigate();
+  const router = useRouter();
+  const { currentUser, loading } = useAppContext();
   const [interviews, setInterviews] = useState<Interview[]>(mockInterviews);
   const [currentDate, setCurrentDate] = useState(new Date(2024, 0, 22)); // January 2024
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -111,16 +114,10 @@ export default function HRInterviews() {
   });
 
   useEffect(() => {
-    const userData = localStorage.getItem('currentUser');
-    if (userData) {
-      const user = JSON.parse(userData);
-      if (user.role !== 'hr' && user.role !== 'admin') {
-        navigate('/dashboard');
-      }
-    } else {
-      navigate('/login');
-    }
-  }, [navigate]);
+    if (loading) return;
+    if (!currentUser) { router.push('/login'); return; }
+    if (currentUser.role !== 'hr' && currentUser.role !== 'admin') router.push('/dashboard');
+  }, [currentUser, loading, router]);
 
   const getCalendarDays = (): CalendarDay[] => {
     const year = currentDate.getFullYear();

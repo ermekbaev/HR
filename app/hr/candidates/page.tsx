@@ -1,12 +1,16 @@
+'use client'
+
+import { useRouter } from 'next/navigation'
+
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Sidebar from '../../../components/feature/Sidebar';
-import Header from '../../../components/feature/Header';
-import Card from '../../../components/base/Card';
-import Button from '../../../components/base/Button';
-import { useAppContext } from '../../../context/AppContext';
-import type { Candidate, CandidateStatus } from '../../../context/AppContext';
+
+import Sidebar from '@/components/feature/Sidebar';
+import Header from '@/components/feature/Header';
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
+import { useAppContext } from '@/context/AppContext';
+import type { Candidate, CandidateStatus } from '@/context/AppContext';
 
 const STATUS_ORDER: CandidateStatus[] = ['new', 'screening', 'interview', 'offer', 'hired', 'rejected'];
 
@@ -22,7 +26,7 @@ const STATUS_COLORS: Record<CandidateStatus, string> = {
 };
 
 export default function HRCandidates() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { candidates, updateCandidateStatus, addCandidate } = useAppContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -218,7 +222,7 @@ export default function HRCandidates() {
                             <i className="ri-eye-line"></i>
                           </button>
                           <button
-                            onClick={() => navigate('/hr/interviews')}
+                            onClick={() => router.push('/hr/interviews')}
                             className="p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors cursor-pointer"
                             title="Назначить собеседование"
                           >
@@ -332,7 +336,7 @@ export default function HRCandidates() {
               )}
 
               <div className="flex space-x-3">
-                <Button onClick={() => navigate('/hr/interviews')} className="flex-1">
+                <Button onClick={() => router.push('/hr/interviews')} className="flex-1">
                   <i className="ri-calendar-line mr-2"></i>Назначить собеседование
                 </Button>
                 <Button variant="outline" onClick={() => setSelectedCandidate(null)} className="flex-1">Закрыть</Button>

@@ -1,9 +1,11 @@
+'use client'
+
 
 import { useState } from 'react';
-import Sidebar from '../../components/feature/Sidebar';
-import Header from '../../components/feature/Header';
-import Card from '../../components/base/Card';
-import Button from '../../components/base/Button';
+import Sidebar from '@/components/feature/Sidebar';
+import Header from '@/components/feature/Header';
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
 
 export default function Learning() {
   const [userRole] = useState<'employee' | 'manager' | 'hr' | 'admin'>('employee');
@@ -117,7 +119,7 @@ export default function Learning() {
       <Sidebar userRole={userRole} />
 
       <div className="flex-1 overflow-y-auto">
-        <Header title="Обучение" skillCoins={skillCoins} />
+        <Header title="Обучение" />
         
         <main className="p-6">
           {/* Статистика обучения */}

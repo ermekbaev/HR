@@ -1,6 +1,8 @@
+'use client'
+
 
 import { useState, useRef, useEffect } from 'react';
-import { useAppContext } from '../../context/AppContext';
+import { useAppContext } from '@/context/AppContext';
 
 interface HeaderProps {
   title: string;

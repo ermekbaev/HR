@@ -1,11 +1,13 @@
+'use client'
+
 
 import { useState } from 'react';
-import Sidebar from '../../components/feature/Sidebar';
-import Header from '../../components/feature/Header';
-import Card from '../../components/base/Card';
-import Button from '../../components/base/Button';
-import { useAppContext } from '../../context/AppContext';
-import { useToast } from '../../context/ToastContext';
+import Sidebar from '@/components/feature/Sidebar';
+import Header from '@/components/feature/Header';
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
+import { useAppContext } from '@/context/AppContext';
+import { useToast } from '@/context/ToastContext';
 
 export default function MentorDashboard() {
   const { tasks, approveTask, rejectTask } = useAppContext();

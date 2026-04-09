@@ -1,10 +1,14 @@
+'use client'
+
+import { useRouter } from 'next/navigation'
+
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Card from '../../components/base/Card';
-import Button from '../../components/base/Button';
-import { useAppContext } from '../../context/AppContext';
-import { useToast } from '../../context/ToastContext';
+
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
+import { useAppContext } from '@/context/AppContext';
+import { useToast } from '@/context/ToastContext';
 
 function getRoleHome(role: string): string {
   switch (role) {
@@ -16,7 +20,7 @@ function getRoleHome(role: string): string {
 }
 
 export default function Login() {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { login, users } = useAppContext();
   const { showToast } = useToast();
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -37,11 +41,11 @@ export default function Login() {
     setError('');
   };
 
-  const doLogin = (username: string, password: string) => {
-    const user = login(username, password);
+  const doLogin = async (username: string, password: string) => {
+    const user = await login(username, password);
     if (user) {
       showToast(`Добро пожаловать, ${user.name}!`, 'success');
-      navigate(getRoleHome(user.role));
+      router.push(getRoleHome(user.role));
     } else {
       setError('Неверный логин или пароль');
     }
@@ -51,10 +55,8 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    setTimeout(() => {
-      doLogin(formData.username, formData.password);
-      setIsLoading(false);
-    }, 600);
+    await doLogin(formData.username, formData.password);
+    setIsLoading(false);
   };
 
   // One click — immediately log in without needing to press the button

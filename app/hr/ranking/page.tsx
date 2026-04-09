@@ -1,10 +1,12 @@
+'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Sidebar from '../../../components/feature/Sidebar';
-import Header from '../../../components/feature/Header';
-import Card from '../../../components/base/Card';
-import Button from '../../../components/base/Button';
+import { useAppContext } from '@/context/AppContext';
+import Sidebar from '@/components/feature/Sidebar';
+import Header from '@/components/feature/Header';
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
 
 interface RankedCandidate {
   id: string;
@@ -101,23 +103,18 @@ const mockRankedCandidates: RankedCandidate[] = [
 ];
 
 export default function HRRanking() {
-  const navigate = useNavigate();
+  const router = useRouter();
+  const { currentUser, loading } = useAppContext();
   const [candidates] = useState<RankedCandidate[]>(mockRankedCandidates);
   const [selectedPosition, setSelectedPosition] = useState<string>('all');
   const [selectedCandidate, setSelectedCandidate] = useState<RankedCandidate | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useEffect(() => {
-    const userData = localStorage.getItem('currentUser');
-    if (userData) {
-      const user = JSON.parse(userData);
-      if (user.role !== 'hr' && user.role !== 'admin') {
-        navigate('/dashboard');
-      }
-    } else {
-      navigate('/login');
-    }
-  }, [navigate]);
+    if (loading) return;
+    if (!currentUser) { router.push('/login'); return; }
+    if (currentUser.role !== 'hr' && currentUser.role !== 'admin') router.push('/dashboard');
+  }, [currentUser, loading, router]);
 
   const positions = ['all', ...new Set(candidates.map(c => c.position))];
 
@@ -325,7 +322,7 @@ export default function HRRanking() {
                       <i className="ri-eye-line mr-1"></i>
                       Детали
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => navigate('/hr/interviews')}>
+                    <Button size="sm" variant="outline" onClick={() => router.push('/hr/interviews')}>
                       <i className="ri-calendar-line mr-1"></i>
                       Собеседование
                     </Button>
@@ -402,7 +399,7 @@ export default function HRRanking() {
               </div>
 
               <div className="flex space-x-3">
-                <Button onClick={() => navigate('/hr/interviews')} className="flex-1">
+                <Button onClick={() => router.push('/hr/interviews')} className="flex-1">
                   <i className="ri-calendar-line mr-2"></i>
                   Назначить собеседование
                 </Button>

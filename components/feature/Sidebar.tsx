@@ -1,7 +1,11 @@
+'use client'
+
+import { useRouter, usePathname } from 'next/navigation'
+
 
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAppContext } from '../../context/AppContext';
+
+import { useAppContext } from '@/context/AppContext';
 
 interface SidebarProps {
   userRole: 'employee' | 'mentor' | 'manager' | 'admin' | 'hr';
@@ -16,15 +20,15 @@ interface MenuItem {
 }
 
 export default function Sidebar({ userRole }: SidebarProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [activeItem, setActiveItem] = useState(location.pathname.slice(1) || 'dashboard');
+  const router = useRouter();
+  const pathname = usePathname();
+  const [activeItem, setActiveItem] = useState(pathname.slice(1) || 'dashboard');
   const { currentUser, logout, getPendingTasksCount, getUnansweredSurveysCount, hasUnreadTaskFeedback } = useAppContext();
 
   useEffect(() => {
-    const path = location.pathname.slice(1) || 'dashboard';
+    const path = pathname.slice(1) || 'dashboard';
     setActiveItem(path);
-  }, [location.pathname]);
+  }, [pathname]);
 
   const pendingCount = getPendingTasksCount();
   const surveyCount = getUnansweredSurveysCount();
@@ -63,12 +67,12 @@ export default function Sidebar({ userRole }: SidebarProps) {
 
   const handleNavigation = (item: MenuItem) => {
     setActiveItem(item.id);
-    navigate(item.path);
+    router.push(item.path);
   };
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    router.push('/login');
   };
 
   const getRoleLabel = (role: string) => {
@@ -127,7 +131,7 @@ export default function Sidebar({ userRole }: SidebarProps) {
       <div className="p-4 border-t border-gray-100 bg-gray-50">
         <div className="flex items-center space-x-3">
           <button
-            onClick={() => navigate('/profile')}
+            onClick={() => router.push('/profile')}
             className="flex items-center space-x-3 flex-1 min-w-0 hover:opacity-80 transition-opacity cursor-pointer text-left"
             title="Мой профиль"
           >

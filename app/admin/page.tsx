@@ -1,15 +1,17 @@
+'use client'
+
 
 import { useState } from 'react';
-import Sidebar from '../../components/feature/Sidebar';
-import Header from '../../components/feature/Header';
-import Card from '../../components/base/Card';
-import Button from '../../components/base/Button';
-import { useAppContext } from '../../context/AppContext';
-import type { AppUser } from '../../context/AppContext';
-import { useToast } from '../../context/ToastContext';
+import Sidebar from '@/components/feature/Sidebar';
+import Header from '@/components/feature/Header';
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
+import { useAppContext } from '@/context/AppContext';
+import type { AppUser } from '@/context/AppContext';
+import { useToast } from '@/context/ToastContext';
 
 export default function AdminDashboard() {
-  const { users, createUser, updateUser, deleteUser, toggleUserStatus, resetToDefaults } = useAppContext();
+  const { users, createUser, updateUser, deleteUser, toggleUserStatus } = useAppContext();
   const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState('users');
   const [showUserModal, setShowUserModal] = useState(false);
@@ -49,12 +51,6 @@ export default function AdminDashboard() {
     }
     setShowUserModal(false);
     setEditingUser(null);
-  };
-
-  const handleReset = () => {
-    if (confirm('Сбросить все данные к начальным значениям? Это действие нельзя отменить.')) {
-      resetToDefaults();
-    }
   };
 
   const handleDeleteUser = (id: string) => {
@@ -168,13 +164,6 @@ export default function AdminDashboard() {
                       <i className="ri-add-line mr-1"></i>Добавить пользователя
                     </Button>
                   )}
-                  <Button
-                    variant="outline"
-                    onClick={handleReset}
-                    className="border-red-300 text-red-700 hover:bg-red-50"
-                  >
-                    <i className="ri-restart-line mr-1"></i>Сброс данных
-                  </Button>
                 </div>
               </div>
             </Card>

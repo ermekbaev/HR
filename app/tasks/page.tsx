@@ -1,10 +1,12 @@
+'use client'
+
 
 import { useState, useEffect } from 'react';
-import Sidebar from '../../components/feature/Sidebar';
-import Header from '../../components/feature/Header';
-import Card from '../../components/base/Card';
-import Button from '../../components/base/Button';
-import { useAppContext } from '../../context/AppContext';
+import Sidebar from '@/components/feature/Sidebar';
+import Header from '@/components/feature/Header';
+import Card from '@/components/base/Card';
+import Button from '@/components/base/Button';
+import { useAppContext } from '@/context/AppContext';
 
 export default function Tasks() {
   const { currentUser, tasks, submitTask, clearTaskFeedback } = useAppContext();
