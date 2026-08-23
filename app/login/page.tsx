@@ -21,19 +21,11 @@ function getRoleHome(role: string): string {
 
 export default function Login() {
   const router = useRouter();
-  const { login, users } = useAppContext();
+  const { login } = useAppContext();
   const { showToast } = useToast();
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  // Demo hints — only show active users
-  const demoUsers = users.filter(u => u.status === 'active').map(u => ({
-    username: u.username,
-    password: u.password,
-    role: u.role,
-    name: u.name
-  }));
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -58,21 +50,6 @@ export default function Login() {
     setIsLoading(false);
   };
 
-  // One click — immediately log in without needing to press the button
-  const handleDemoLogin = (u: { username: string; password: string }) => {
-    doLogin(u.username, u.password);
-  };
-
-  const getRoleLabel = (role: string) => {
-    switch (role) {
-      case 'employee': return 'Сотрудник';
-      case 'mentor': return 'Наставник';
-      case 'manager': return 'Руководитель';
-      case 'hr': return 'HR-специалист';
-      case 'admin': return 'Администратор';
-      default: return role;
-    }
-  };
 
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -139,30 +116,6 @@ export default function Login() {
               )}
             </Button>
           </form>
-        </Card>
-
-        {/* Демо аккаунты */}
-        <Card className="mt-6">
-          <h3 className="text-sm font-medium text-gray-700 mb-4">Демо аккаунты для тестирования:</h3>
-          <div className="space-y-2">
-            {demoUsers.map((user) => (
-              <button
-                key={user.username}
-                onClick={() => handleDemoLogin(user)}
-                className="w-full text-left p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                    <p className="text-xs text-gray-500 capitalize">{getRoleLabel(user.role)}</p>
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    {user.username} / {user.password}
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
         </Card>
 
         <div className="text-center mt-6">

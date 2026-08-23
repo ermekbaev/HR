@@ -2,8 +2,23 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export async function GET() {
+  // Пароль намеренно не выбирается: этот список уходит в браузер,
+  // и раньше пароли всех пользователей были видны в ответе API.
   const users = await prisma.user.findMany({
-    orderBy: { createdAt: 'asc' }
+    orderBy: { createdAt: 'asc' },
+    select: {
+      id: true,
+      username: true,
+      name: true,
+      email: true,
+      role: true,
+      department: true,
+      position: true,
+      status: true,
+      skillCoins: true,
+      lastLogin: true,
+      createdAt: true
+    }
   })
   return NextResponse.json(users)
 }
